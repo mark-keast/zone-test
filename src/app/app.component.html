@@ -1,0 +1,77 @@
+<div class="container">
+  <div class="row">
+    <header class="col-12">
+      <h1>TMDb Movies List</h1>
+    </header>
+  </div>
+    <section class="row pl-3 pr-3">
+      <nav class="col-12">
+          <hr/>
+
+        <div class="row pt-4">
+            <div class="col-xs-12 ">
+                <h4>Filter by 'Ratings':</h4>
+              </div>
+            </div>
+            <div class="row">
+          <!-- Rating at present just sort the original list
+              Ideally it sorts what visible/been chosen by the user  -->
+            <div class=" col-xs-12 pb-2">
+              <div>
+              <span class="d-inline-block">0</span>
+              <span class="d-inline-block float-right">10</span>
+              </div>
+              <input type="range" min="0" max="10" value="0" id="fader" (change)="getRating($event)">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class=" col-xs-12 pb-4">
+              <p>
+                <span *ngIf="!rating">No</span> Rating <span *ngIf="rating"><strong>{{rating}}</strong></span> chosen
+              </p>
+            </div>
+         </div>
+
+        <div class="row">
+          <div class=" col-xs-12">
+            <h4>Or 'Genres':</h4>
+          </div>
+          <div class=" col-xs-12">
+            <button *ngFor="let genre of moviesGenres" class="btn">
+           <span (click)="selectGenre(genre.id)"> {{genre.name}}</span>
+          </button>
+
+           <a href="#" (click)="resetGenre($event)"> reset genre(s) </a>
+
+          </div>
+          </div>
+          <hr />
+      </nav>
+
+
+
+          <section class="pt-4">
+            <h4>Movies No Playing listed: <strong>{{moviesNowPlaying.length}}</strong></h4>
+
+          <div *ngIf="moviesNowPlaying.length > 0; else emptyList" class="row">
+            <div *ngFor="let movie of moviesNowPlaying" class="col-6">
+              <div class="row pt-4">
+                <div class="col-4">
+                  <img src="{{configImages!.images!.base_url}}{{configImages!.images!.poster_sizes[1]}}/{{movie.poster_path}}">
+                </div>
+                <div class="col-8">
+                  <h3>{{movie.title}}</h3>
+                  <small *ngFor="let genre of movie.genre_ids"><i>{{getName(genre)}}</i>, </small>
+                  <div>Rating: <strong>{{movie.vote_average }}</strong></div>
+                  <div>popularity: <strong>{{movie.popularity }}</strong></div>
+              </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #emptyList>
+            <h3 class="pt-3 pb-3">No {{message}}</h3>
+          </ng-template>
+          </section>
+      </section>
+</div>
