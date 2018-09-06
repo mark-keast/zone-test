@@ -7,12 +7,11 @@ I build this App in Angular CLI as this is my main tool at present, It took long
 Its a mix of ES6 and normal Javascript.
 
 ## Git repo
-Once you clone the repo, it should be a case of just running'ng serve'
-I have dropped all files in so no need to install any dependencies
+You will need to install Angular CLI 'npm install -g @angular/cli'
+Once you clone the repo, you will need to run  'npm install'
+Then run 'ng serve'
+Then go to 'http://localhost:4200/'
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`.
 
 ## Outstanding work.
 I kept to the 2 days (evenings) and ran out of time do some tidy up and fix the Genres grouping, at present you can pick multiple Genres and see them, but at present its not filtered.
