@@ -14,14 +14,12 @@
               </div>
             </div>
             <div class="row">
-          <!-- Rating at present just sort the original list
-              Ideally it sorts what visible/been chosen by the user  -->
             <div class=" col-xs-12 pb-2">
               <div>
               <span class="d-inline-block">0</span>
               <span class="d-inline-block float-right">10</span>
               </div>
-              <input type="range" min="0" max="10" value="0" id="fader" (change)="getRating($event)">
+              <input type="range" #slider min="0" max="10" [value]="sliderValue" id="fader" (change)="getRating($event)">
             </div>
           </div>
 
@@ -35,30 +33,28 @@
 
         <div class="row">
           <div class=" col-xs-12">
-            <h4>Or 'Genres':</h4>
+            <h4>Filter by 'Genres':</h4>
           </div>
           <div class=" col-xs-12">
             <button *ngFor="let genre of moviesGenres" class="btn">
            <span (click)="selectGenre(genre.id)"> {{genre.name}}</span>
           </button>
-
-           <a href="#" (click)="resetGenre($event)"> reset genre(s) </a>
-
+           <a href="#" class="btn btn-primary" (click)="resetGenre($event)"> reset genre(s) </a>
           </div>
           </div>
           <hr />
       </nav>
 
 
-
-          <section class="pt-4">
+          <section class="pt-4 col-12">
             <h4>Movies No Playing listed: <strong>{{moviesNowPlaying.length}}</strong></h4>
+            <div *ngIf="genreButtonChosen.length != 0"> <strong>Genre<span *ngIf="genreButtonChosen.length > 1">'s</span> Chosen</strong> : {{getGenre()}}</div>
 
-          <div *ngIf="moviesNowPlaying.length > 0; else emptyList" class="row">
+            <div *ngIf="moviesNowPlaying.length > 0; else emptyList" class="row">
             <div *ngFor="let movie of moviesNowPlaying" class="col-6">
               <div class="row pt-4">
                 <div class="col-4">
-                  <img src="{{configImages!.images!.base_url}}{{configImages!.images!.poster_sizes[1]}}/{{movie.poster_path}}">
+                  <img src="{{configMovie!.images!.base_url}}{{configMovie!.images!.poster_sizes[1]}}/{{movie.poster_path}}">
                 </div>
                 <div class="col-8">
                   <h3>{{movie.title}}</h3>

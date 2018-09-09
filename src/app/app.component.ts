@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { TmdbService } from './services/tmdb.service';
 import { OnInit } from '@angular/core';
 import { Movie, ResultList, Genre, Config, genreNames } from './models/movie';
@@ -14,7 +14,7 @@ export class AppComponent implements OnInit  {
   // store the original data from first API call for future ref
   movieStore: Movie[];
   genreStore: Genre[];
-  configImages: Config;
+  configMovie: Config;
 
   // variables for the UI
   moviesNowPlaying: Movie[] = [];
@@ -22,19 +22,24 @@ export class AppComponent implements OnInit  {
   rating: number;
 
   genreArray = [];
+  genreArrayList = [];
+  copyGenreList = [];
+  genreButtonChosen: Array<string> = [];
   message: string;
+  sliderValue = 0;
+
+  @ViewChild('slider') slider: ElementRef;
 
   constructor(private service: TmdbService) {
   }
 
   ngOnInit() {
-
+    // get all data and store it
     this.service.getMoviesList().subscribe(movieList => {
       this.movieStore = movieList.results;
-      const sortArray = movieList.results.sort((a, b) => {
+      return this.moviesNowPlaying = movieList.results.sort((a, b) => {
         return b.popularity - a.popularity ;
       });
-      return this.moviesNowPlaying = sortArray;
     });
 
     this.service.getMoviesGenres().subscribe(movieGenre => {
@@ -42,8 +47,8 @@ export class AppComponent implements OnInit  {
       return this.moviesGenres = movieGenre.genres;
     });
 
-    this.service.getConfigImages().subscribe(configImages => {
-      return this.configImages = configImages;
+    this.service.getConfigImages().subscribe(config => {
+      return this.configMovie = config;
     });
 
   }
@@ -51,26 +56,55 @@ export class AppComponent implements OnInit  {
   public getName(n: number) {
     return genreNames[n];
   }
-  public selectGenre(idGenre: number) {
-    this.message = 'Genres Avaiable';
+  public getGenre() {
+    return  this.genreButtonChosen.filter((item, pos) => this.genreButtonChosen.indexOf(item) === pos);
+  }
 
-    console.log('clicked!!');
+  public selectGenre(idGenre: number) {
+    this.message = 'Genres Available';
+    this.slider.nativeElement.valueAsNumber = this.sliderValue;
+    this.rating = this.sliderValue;
+    this.genreButtonChosen.push(genreNames[idGenre]);
     this.emptyList();
     this.movieStore.forEach((item, index) => {
       const id = item.id;
       item.genre_ids.forEach((idGenreID, indexID) => {
           if (idGenreID === idGenre) {
-              this.genreArray.push(item);
+            this.genreArrayList.push(item.id);
           }
-
       });
-
+      // remove dup ids when chosing files that are in many categories
+      this.removeDuplicateIDs(this.genreArrayList);
 
     });
 
-    console.log('just before it updaqte view');
     this.emptyList();
-    this.moviesNowPlaying = this.genreArray;
+     this.movieStore.forEach(movieStoreItem => {
+                this.genreArrayList.forEach( galItem => {
+                  if ( galItem === movieStoreItem.id) {
+                    this.moviesNowPlaying.push(movieStoreItem);
+                  }
+                });
+
+          });
+      this.orderByPopularity(this.moviesNowPlaying);
+      // make copy of genre list for any rating searches/filter later
+      this.copyGenreList = this.moviesNowPlaying;
+
+  }
+
+  // remove dup ids when chosing files that are in many categories
+  private removeDuplicateIDs(arr: Array<any>) {
+    return this.genreArrayList = arr.filter((item, pos) => {
+        return this.genreArrayList.indexOf(item) === pos;
+    });
+  }
+
+  // after first load ordering can be lost when pushing, so do a quick sweep to re-order
+  private orderByPopularity(list: Movie[]) {
+    return list.sort((a, b) => {
+      return b.popularity - a.popularity ;
+    });
   }
 
   private resetList() {
@@ -78,6 +112,7 @@ export class AppComponent implements OnInit  {
   }
   public resetGenre(event: any) {
     event.preventDefault();
+    this.genreButtonChosen = [];
     this.genreArray = [];
     this.moviesNowPlaying = this.movieStore;
   }
@@ -87,12 +122,20 @@ export class AppComponent implements OnInit  {
   }
 
   public getRating(event: any) {
-    this.message = 'Ratings Avaiable';
-    // reset movie list
-    this.resetList();
+    this.message = 'Ratings Available';
     this.rating = event.target.valueAsNumber;
-    this.moviesNowPlaying = this.moviesNowPlaying.filter(x => {
-      return  event.target.valueAsNumber <= x.vote_average;
-    });
+    // if no genre picked filter rating on main list
+    if (this.genreArrayList.length === 0) {
+      this.moviesNowPlaying = this.movieStore.filter(x => {
+          return  event.target.valueAsNumber <= x.vote_average;
+        });
+    } else {
+        // if we not filtering on main list we are now filtering on the genre list
+        // a copy was made so we can filter and change the current view but keep tabs
+        // on the final genre search requested by user
+        this.moviesNowPlaying = this.copyGenreList.filter(x => {
+          return  event.target.valueAsNumber <= x.vote_average;
+        });
+    }
   }
 }
