@@ -20,9 +20,6 @@ Then go to 'http://localhost:4200/'
 
 and it should load. :relieved:
 
-## Bug.
-Slight weird issue sometimes when page is loaded console gives errors regarding the images, F5 and its then fine.. weird!
-
 ## Bugs
 I have noticed the console shows errors regarding 'image' undefined, but F5 ad it loads okay, weird angular one, not sure issue.
 
