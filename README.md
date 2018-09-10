@@ -26,15 +26,5 @@ Slight weird issue sometimes when page is loaded console gives errors regarding 
 ## Bugs
 I have noticed the console shows errors regarding 'image' undefined, but F5 ad it loads okay, weird angular one, not sure issue.
 
-## additional notes
-
-Give more time (a sprint :smiley:)I would have changed the Rating slider to filter the list on view
-
-Fixed the duplicate issue
-
-and possibly restructured the way I did it, spend more time thinking about the data and how it all interlinked.
-
-Also create more reusable components.
-
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
