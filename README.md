@@ -13,8 +13,8 @@ Then run 'ng serve'
 Then go to 'http://localhost:4200/'
 
 
-## Outstanding work.
-I kept to the 2 days (evenings) and ran out of time do some tidy up and fix the Genres grouping, at present you can pick multiple Genres and see them, but at present its not filtered.
-So you can get duplicate entries as they are in multiple Genre groups.
+## Bug.
+Slight weird issue sometimes when page is loaded console gives errors regarding the images, F5 and its then fine.. weird!
+Its not a regular issue.
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
